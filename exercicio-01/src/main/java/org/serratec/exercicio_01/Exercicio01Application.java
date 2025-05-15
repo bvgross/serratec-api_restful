@@ -1,12 +1,13 @@
-package org.serratec.aula_01;
+package org.serratec.exercicio_01;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Aula01Application {
+public class Exercicio01Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Aula01Application.class, args);
+		SpringApplication.run(Exercicio01Application.class, args);
 	}
+
 }
