@@ -1,5 +1,6 @@
 package org.serratec.exercicio_03.veiculo.controller;
 
+import org.apache.el.lang.ELArithmetic;
 import org.serratec.exercicio_03.veiculo.domain.Produto;
 import org.serratec.exercicio_03.veiculo.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +39,29 @@ public class ProdutoController {
        return produto;
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Produto> modificar(@PathVariable Long id, @RequestBody Produto produto) {
+        Optional<Produto> produtoOptional = produtoRepository.findById(id);
+        if (produtoOptional.isPresent()) {
+            Produto existente = produtoOptional.get();
+            existente.setDescricao(produto.getDescricao());
+            existente.setValor(produto.getValor());
+            existente.setDataCadastro(produto.getDataCadastro());
+            Produto atualizado = produtoRepository.save(existente);
+            return ResponseEntity.ok(atualizado);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        Optional<Produto> produtoOptional = produtoRepository.findById(id);
+        if (produtoOptional.isPresent()) {
+            produtoRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
