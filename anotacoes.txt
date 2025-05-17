@@ -1,0 +1,1 @@
+estudar protecoes aos jsons (body recebidos) e tratamento de erros

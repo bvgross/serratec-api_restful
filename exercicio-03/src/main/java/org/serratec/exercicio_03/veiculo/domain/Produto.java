@@ -1,6 +1,10 @@
 package org.serratec.exercicio_03.veiculo.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
@@ -11,9 +15,13 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Preencha a descrição")
+    @Size(max = 40, message = "Tamanho máximo 40 carecteres")
     @Column(name = "descricao", nullable = false, length = 40)
     private String descricao;
 
+    @DecimalMax(value="5000", message = "O preço não pode ser maior que R${value},00")
+    @DecimalMin(value="5", message = "O preço não pode ser menor que R${value},00")
     @Column
     private BigDecimal valor;
 
