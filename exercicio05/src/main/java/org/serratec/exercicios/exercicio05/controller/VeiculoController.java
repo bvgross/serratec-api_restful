@@ -45,18 +45,10 @@ public class VeiculoController {
         Optional<Veiculo> veiculoOptional = veiculoRepository.findById(id);
         if (veiculoOptional.isPresent()) {
             Veiculo v = veiculoOptional.get();
-            if (!veiculo.getMarca().isBlank()) {
-                v.setMarca(veiculo.getMarca());
-            }
-            if (!veiculo.getModelo().isBlank()) {
-                v.setModelo(veiculo.getModelo());
-            }
-            if (!veiculo.getPlaca().isBlank()) {
-                v.setPlaca(veiculo.getPlaca());
-            }
-            if (veiculo.getCaracteristica() != null) {
-                v.setCaracteristica(veiculo.getCaracteristica());
-            }
+            v.setMarca(veiculo.getMarca());
+            v.setModelo(veiculo.getModelo());
+            v.setPlaca(veiculo.getPlaca());
+            v.setCaracteristica(veiculo.getCaracteristica());
             veiculoRepository.save(v);
             return ResponseEntity.ok(v);
         }
