@@ -1,6 +1,7 @@
 package org.serratec.exercicios.exercicio05.utils;
 
 import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import org.serratec.exercicios.exercicio05.enums.Combustivel;
 
 @Converter

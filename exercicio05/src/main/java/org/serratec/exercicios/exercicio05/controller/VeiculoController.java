@@ -1,5 +1,10 @@
 package org.serratec.exercicios.exercicio05.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.serratec.exercicios.exercicio05.domain.Veiculo;
 import org.serratec.exercicios.exercicio05.respositories.VeiculoRepository;
@@ -18,6 +23,19 @@ public class VeiculoController {
     @Autowired
     VeiculoRepository veiculoRepository;
 
+    /*
+    @Operation(summary = "Lista todos os veiculos",
+        description = "A resposta lista os dados dos veiculos")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            content = {@Content(schema = @Schema(implementation = Veiculo.class),
+                mediaType = "application/json")}, description = "Retorna todos os Veiculos"),
+        @ApiResponse(responseCode = "401", description = "Erro de autenticação"),
+        @ApiResponse(responseCode = "403", description = "Não há permissão para acessar o recurso"),
+        @ApiResponse(responseCode = "404", description = "Recurso não encontrado"),
+        @ApiResponse(responseCode = "505", description = "Exceção interna da aplicação")
+    })
+    */
     @GetMapping
     public ResponseEntity<List<Veiculo>> exibirLista() {
         return ResponseEntity.ok(veiculoRepository.findAll());
