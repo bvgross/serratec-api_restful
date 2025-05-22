@@ -1,12 +1,22 @@
 package org.serratec.aulas.aula07.servicedto.service;
 
+import org.serratec.aulas.aula07.servicedto.domain.Perfil;
 import org.serratec.aulas.aula07.servicedto.domain.Usuario;
+import org.serratec.aulas.aula07.servicedto.domain.UsuarioPerfil;
+import org.serratec.aulas.aula07.servicedto.dto.UsuarioDTO;
+import org.serratec.aulas.aula07.servicedto.dto.UsuarioInserirDTO;
 import org.serratec.aulas.aula07.servicedto.exception.EmailException;
+import org.serratec.aulas.aula07.servicedto.exception.SenhaException;
+import org.serratec.aulas.aula07.servicedto.repository.UsuarioPerfilRepository;
 import org.serratec.aulas.aula07.servicedto.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UsuarioService {
@@ -14,15 +24,47 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<Usuario> buscarTodos() {
-        return usuarioRepository.findAll();
+    @Autowired
+    private PerfilService perfilService;
+
+    @Autowired
+    private UsuarioPerfilRepository usuarioPerfilRepository;
+
+    public List<UsuarioDTO> buscarTodos() {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        List<UsuarioDTO> usuariosDto = new ArrayList<>();
+        for (Usuario u: usuarios) {
+            UsuarioDTO uDto = new UsuarioDTO(u);
+            usuariosDto.add(uDto);
+        }
+        return usuariosDto;
     }
 
-    public Usuario inserir(Usuario user) throws EmailException {
-        Usuario usuario = usuarioRepository.findByEmail(user.getEmail());
-        if (usuario != null) {
+    public UsuarioDTO inserir(UsuarioInserirDTO usuarioInserirDTO) throws EmailException {
+        if(!usuarioInserirDTO.getSenha().equals(usuarioInserirDTO.getConfirmaSenha())) {
+            throw new SenhaException("Senha e Confirma Senha não são iguais");
+        }
+        if (usuarioRepository.findByEmail(usuarioInserirDTO.getEmail()) != null) {
             throw new EmailException("Email já cadastrado");
         }
-        return usuarioRepository.save(user);
+
+        Usuario usuario = new Usuario();
+        usuario.setNome(usuarioInserirDTO.getNome());
+        usuario.setEmail(usuarioInserirDTO.getEmail());
+        usuario.setSenha(usuarioInserirDTO.getSenha());
+
+        Set<UsuarioPerfil> usuarioPerfis = new HashSet<>();
+        for (Perfil p: usuarioInserirDTO.getPerfis()) {
+            p = perfilService.buscar(p.getId());
+            UsuarioPerfil usuarioPerfil = new UsuarioPerfil(usuario, p, LocalDate.now());
+            usuarioPerfis.add(usuarioPerfil);
+        }
+
+        usuario.setUsuarioPerfis(usuarioPerfis);
+
+        usuario = usuarioRepository.save(usuario);//para gerar o id e registrar no repositorio
+
+        UsuarioDTO usuarioDTO = new UsuarioDTO(usuario);
+        return new UsuarioDTO(usuario);
     }
 }

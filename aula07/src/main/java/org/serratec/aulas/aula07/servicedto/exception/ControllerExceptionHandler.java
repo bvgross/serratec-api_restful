@@ -8,8 +8,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(EmailException.class)
-    protected ResponseEntity<Object> handleEmailException(EmailException ex) {
+//    @ExceptionHandler(EmailException.class)
+//    protected ResponseEntity<Object> handleEmailException(EmailException ex) {
+//        return ResponseEntity.unprocessableEntity().body(ex.getMessage());
+//    }
+//
+//    @ExceptionHandler(SenhaException.class)
+//    protected ResponseEntity<Object> handleEmailException(SenhaException ex) {
+//        return ResponseEntity.unprocessableEntity().body(ex.getMessage());
+//    }
+
+    @ExceptionHandler({EmailException.class, SenhaException.class})
+    protected ResponseEntity<Object> handleEmailESenhaException(RuntimeException ex) {
         return ResponseEntity.unprocessableEntity().body(ex.getMessage());
     }
 }
