@@ -17,8 +17,8 @@ public class Servico {
     @Column
     private BigDecimal valor;
 
-//    @ManyToMany<mappedBy = "servicos>
-//    private List<Servico> servico;
+    @ManyToMany(mappedBy = "servicos")
+    private List<Servico> servico;
 
     public Long getId() {
         return id;
