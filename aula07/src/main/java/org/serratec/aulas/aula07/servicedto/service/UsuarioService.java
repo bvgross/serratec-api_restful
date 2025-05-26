@@ -10,6 +10,9 @@ import org.serratec.aulas.aula07.servicedto.exception.SenhaException;
 import org.serratec.aulas.aula07.servicedto.repository.UsuarioPerfilRepository;
 import org.serratec.aulas.aula07.servicedto.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,7 +33,12 @@ public class UsuarioService {
     @Autowired
     private UsuarioPerfilRepository usuarioPerfilRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
     public List<UsuarioDTO> buscarTodos() {
+        UserDetails detais = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(detais.getUsername());
         List<Usuario> usuarios = usuarioRepository.findAll();
         List<UsuarioDTO> usuariosDto = new ArrayList<>();
         for (Usuario u: usuarios) {
@@ -51,7 +59,7 @@ public class UsuarioService {
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioInserirDTO.getNome());
         usuario.setEmail(usuarioInserirDTO.getEmail());
-        usuario.setSenha(usuarioInserirDTO.getSenha());
+        usuario.setSenha(encoder.encode(usuarioInserirDTO.getSenha()));
 
         Set<UsuarioPerfil> usuarioPerfis = new HashSet<>();
         for (Perfil p: usuarioInserirDTO.getPerfis()) {

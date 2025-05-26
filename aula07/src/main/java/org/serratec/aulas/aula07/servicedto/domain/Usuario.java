@@ -1,13 +1,15 @@
 package org.serratec.aulas.aula07.servicedto.domain;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.*;
 
 @Entity
-public class Usuario {
+public class Usuario implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,5 +85,24 @@ public class Usuario {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (UsuarioPerfil usuarioPerfil: getUsuarioPerfis()) {
+            authorities.add(new SimpleGrantedAuthority(usuarioPerfil.getId().getPerfil().getNome()));
+        }
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 }
