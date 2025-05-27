@@ -1,5 +1,6 @@
 package org.serratec.aulas.aula07.servicedto.service;
 
+import org.serratec.aulas.aula07.servicedto.config.MailConfig;
 import org.serratec.aulas.aula07.servicedto.domain.Perfil;
 import org.serratec.aulas.aula07.servicedto.domain.Usuario;
 import org.serratec.aulas.aula07.servicedto.domain.UsuarioPerfil;
@@ -36,6 +37,9 @@ public class UsuarioService {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
+    @Autowired
+    private MailConfig mailConfig;
+
     public List<UsuarioDTO> buscarTodos() {
         UserDetails detais = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         System.out.println(detais.getUsername());
@@ -71,6 +75,8 @@ public class UsuarioService {
         usuario.setUsuarioPerfis(usuarioPerfis);
 
         usuario = usuarioRepository.save(usuario);//para gerar o id e registrar no repositorio
+
+        mailConfig.sendEmail(usuario.getEmail(), "Cadastro de Usuário!", usuario.toString());
 
         UsuarioDTO usuarioDTO = new UsuarioDTO(usuario);
         return new UsuarioDTO(usuario);

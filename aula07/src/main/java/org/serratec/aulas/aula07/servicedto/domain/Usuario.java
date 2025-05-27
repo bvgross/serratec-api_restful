@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Usuario implements UserDetails, Serializable {
@@ -104,5 +105,18 @@ public class Usuario implements UserDetails, Serializable {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+            "id=" + id +
+            ", nome='" + nome + '\'' +
+            ", email='" + email + '\'' +
+            ", senha='" + senha + '\'' +
+            ", usuarioPerfis=" + usuarioPerfis.stream()
+                .map(up -> up.getId().getPerfil().getNome())
+                .collect(Collectors.joining(",")) +
+            '}';
     }
 }
